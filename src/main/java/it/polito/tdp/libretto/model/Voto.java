@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @author Fulvio
  *
  */
-public class Voto {
+public class Voto implements Comparable<Voto>{
 	
 	private String corso ; // "Tecniche di Programmazione"
 	private int voto ; // 28
@@ -27,6 +27,17 @@ public class Voto {
 		this.corso = corso;
 		this.voto = voto;
 		this.data = data;
+	}
+	
+	/**
+	 * Copy constructor di {@link Voto}: crea un nuovo {@link Voto}, copiando
+	 * il contenuto del parametro {@code v}.
+	 * @param v il voto da copiare
+	 */
+	public Voto(Voto v) { // o uso questo o uso clone()
+		this.corso = new String(v.corso); // v.getCorso()
+		this.data = v.data;
+		this.voto = v.voto;
 	}
 
 	public String getCorso() {
@@ -81,6 +92,25 @@ public class Voto {
 		} else if (!corso.equals(other.corso))
 			return false;
 		return true;
+	}
+	
+	
+	/**
+	 * crea una copia (clone dell'oggetto presente (this), come nuovo oggetto;
+	 */
+	public Voto clone() {
+		Voto v = new Voto(this.corso,this.voto,this.data);
+		return v;
+	}
+
+	@Override
+	public int compareTo(Voto other) {
+		/*
+		 * <0 se this < other
+		 * == 0 se this == other
+		 * >0 se this > other
+		 */
+		return this.corso.compareTo(other.corso);
 	}
 	
 	

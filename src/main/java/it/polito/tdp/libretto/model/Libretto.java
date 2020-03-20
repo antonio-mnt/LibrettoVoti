@@ -1,6 +1,7 @@
 package it.polito.tdp.libretto.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,6 +13,25 @@ import java.util.List;
 public class Libretto {
 
 	private List<Voto> voti = new ArrayList<>();
+	
+	
+	/**
+	 * Crea un libretto nuovo (e vuoto)
+	 */
+	public Libretto() {
+		super();
+	}
+	
+	// l'alternativa è Deep (copia profonda) clona gli elemnti, shallow mantiene gli stessi oggetti in una lista diversa
+	/**
+	 * Copy Constructor
+	 * "Shallow" (copia superficiale)
+	 * @param lib
+	 */
+	public Libretto(Libretto lib) {
+		super();
+		this.voti.addAll(lib.voti);
+	}
 
 	/**
 	 * Aggiunge un nuovo voto al libretto
@@ -130,6 +150,61 @@ public class Libretto {
 		if(esiste == null) // non l'ho trovato ==> non è un duplicato
 			return false;
 		return(esiste.getVoto()!=v.getVoto());
+	}
+	
+	/**
+	 * Restituisce un NUOVO libretto, migliorando i voti del libretto attuale.
+	 * 
+	 * @return
+	 */
+	public Libretto creaLibrettoMigliorato() {
+		Libretto nuovo = new Libretto();
+		
+		for(Voto v: this.voti) {
+			//Voto v2 = new Voto(v);
+			Voto v2 = v.clone();
+			// NON CI PIACE : Voto v3 = new Voto(v.getCorso(),v.getVoto(),v.getData());
+			
+			if(v2.getVoto()>=24) {
+				v2.setVoto(v2.getVoto()+2);
+				if(v2.getVoto()>30)
+					v2.setVoto(30);
+			}else if (v2.getVoto()>=18) {
+				v2.setVoto(v2.getVoto()+1);
+			}
+			nuovo.add(v2);
+		}
+		return nuovo;
+	}
+	
+	/**
+	 * riordina i voti presenti nel libretto corrente
+	 * alfabeticamente per corso
+	 */
+	public void ordinaPerCorso() {
+		Collections.sort(this.voti);
+	}
+	
+	public void ordinaPerVoto() {
+		Collections.sort(this.voti, new ConfrontaVotiPerValutazione());
+		//this.voti.sort(new ConfrontaVotiPerValutazione());
+	}
+	
+	/**
+	 * Elimina dal libretto tutti i voti <24
+	 */
+	public void cancellaVotiScarsi() {
+		List<Voto> daRimuovere = new ArrayList<>();
+		for(Voto v: this.voti) {
+			if(v.getVoto()<24) {
+				daRimuovere.add(v);
+			}
+		}
+		
+		this.voti.removeAll(daRimuovere);
+		/*for(Voto v: daRimuovere) {
+			this.voti.remove(v);
+		}*/
 	}
 
 }
